@@ -2,12 +2,14 @@ package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.dtos.SignUpDTO;
 import com.java.main.springstarter.v1.exceptions.BadRequestException;
+import com.java.main.springstarter.v1.fileHandling.File;
 import com.java.main.springstarter.v1.fileHandling.FileStorageService;
 import com.java.main.springstarter.v1.models.Role;
 import com.java.main.springstarter.v1.models.User;
 import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.repositories.IRoleRepository;
 import com.java.main.springstarter.v1.security.JwtTokenProvider;
+import com.java.main.springstarter.v1.services.IFileService;
 import com.java.main.springstarter.v1.services.IUserService;
 import com.java.main.springstarter.v1.utils.Constants;
 import org.apache.catalina.Cluster;
@@ -27,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -42,6 +43,7 @@ public class UserController {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final FileStorageService fileStorageService;
+    private final IFileService fileService;
 
     @Value("${upload.directory.user_profiles}")
     private String directory;
@@ -49,11 +51,12 @@ public class UserController {
     @Autowired
     public UserController(IUserService userService, IRoleRepository roleRepository,
                           BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider,
-                          FileStorageService fileStorageService) {
+                          FileStorageService fileStorageService, IFileService fileService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.fileService = fileService;
         this.fileStorageService = fileStorageService;
     }
 
@@ -108,9 +111,9 @@ public class UserController {
             @RequestParam("file") MultipartFile document
     ) {
         this.userService.getById(id);
-        File file = this.fileStorageService.create(document, directory);
+        File file = this.fileService.create(document, directory);
 
-        Document updated = this.documentService.updateFile(id, file);
+        User updated = this.userService.changeProfileImage(id, file);
 
         return ResponseEntity.ok(new ApiResponse(true, "File saved successfully", updated));
 
