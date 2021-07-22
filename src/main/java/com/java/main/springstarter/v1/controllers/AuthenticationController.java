@@ -4,6 +4,7 @@ import com.java.main.springstarter.v1.dtos.InitiatePasswordDTO;
 import com.java.main.springstarter.v1.dtos.ResetPasswordDTO;
 import com.java.main.springstarter.v1.dtos.SignInDTO;
 import com.java.main.springstarter.v1.enums.EUserStatus;
+import com.java.main.springstarter.v1.exceptions.AppException;
 import com.java.main.springstarter.v1.models.User;
 import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.payload.JwtAuthenticationResponse;
@@ -87,12 +88,12 @@ public class AuthenticationController {
         if(Utility.isCodeValid(user.getActivationCode(), dto.getActivationCode()) &&
                 (user.getStatus().equals(EUserStatus.RESET)) || user.getStatus().equals(EUserStatus.PENDING))
         {
-            user.setPassword(bCryptPasswordEncoder.encode(resetPasswordDTO.getPassword()));
+            user.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
             user.setActivationCode(Utility.randomUUID(6, 0, 'N'));
             user.setStatus(EUserStatus.ACTIVE);
-            userRepository.save(user);
+            this.userService.create(user);
         }else{
-            throw new AppException("Invalid code or account has status of pending");
+            throw new AppException("Invalid code or account status");
         }
-        return ResponseEntity.ok(new ApiResponse(true,"user successfully activated"));
+        return ResponseEntity.ok(new ApiResponse(true,"Password successfully reset"));
     }
