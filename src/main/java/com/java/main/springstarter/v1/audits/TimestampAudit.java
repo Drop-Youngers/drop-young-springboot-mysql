@@ -31,6 +31,6 @@ public abstract class TimestampAudit implements Serializable {
 
     @UpdateTimestamp
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Column(name="created_at")
+    @Column(name="updated_at")
     private LocalDateTime updatedAt;
 }

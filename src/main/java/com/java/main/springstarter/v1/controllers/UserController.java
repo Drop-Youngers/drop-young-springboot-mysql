@@ -54,7 +54,7 @@ public class UserController {
         return this.userService.getAll();
     }
 
-    @GetMapping
+    @GetMapping(path="/paginated")
     public Page<User> getAllUsers(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
                                   @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int limit
     ) {

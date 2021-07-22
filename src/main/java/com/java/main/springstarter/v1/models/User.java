@@ -46,10 +46,11 @@ public class User extends TimestampAudit {
 
     @JsonIgnore
     @NotBlank
-    @Column(name="mobile")
+    @Column(name="password")
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name="gendder")
     private EGender gender;
 
     @Enumerated(EnumType.STRING)
