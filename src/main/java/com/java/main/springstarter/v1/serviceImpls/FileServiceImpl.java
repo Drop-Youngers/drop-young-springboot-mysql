@@ -7,6 +7,7 @@ import com.java.main.springstarter.v1.exceptions.ResourceNotFoundException;
 import com.java.main.springstarter.v1.fileHandling.File;
 import com.java.main.springstarter.v1.fileHandling.FileStorageService;
 import com.java.main.springstarter.v1.repositories.IFileRepository;
+import com.java.main.springstarter.v1.services.IFileService;
 import com.java.main.springstarter.v1.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class FileServiceImpl {
+public class FileServiceImpl  implements IFileService {
     private final IFileRepository fileRepository;
     private final FileStorageService fileStorageService;
 
@@ -39,19 +40,23 @@ public class FileServiceImpl {
         this.fileStorageService = fileStorageService;
     }
 
+    @Override
     public List<File> getAll() {
         return this.fileRepository.findAll();
     }
 
+    @Override
     public Page<File> getAll(Pageable pageable) {
         return  this.fileRepository.findAll(pageable);
     }
 
+    @Override
     public File getById(UUID id) {
         return this.fileRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("File", "id", id.toString()));
     }
 
+    @Override
     public File create(MultipartFile document, String directory) {
         File file = new File();
         file.setStatus(EFileStatus.PENDING);
@@ -71,7 +76,7 @@ public class FileServiceImpl {
         return this.fileRepository.save(file);
     }
 
-
+    @Override
     public boolean delete(UUID id) {
         boolean exists = this.fileRepository.existsById(id);
         if (!exists)
@@ -80,10 +85,12 @@ public class FileServiceImpl {
         return true;
     }
 
+    @Override
     public Page<File> getAllByStatus(Pageable pageable, EFileStatus status) {
         return this.fileRepository.findAllByStatus(pageable, status);
     }
 
+    @Override
     public File uploadFile(MultipartFile file, String directory, UUID appointeeID) throws InvalidFileException, IOException {
         String fileName = handleFileName(Objects.requireNonNull(file.getOriginalFilename()), appointeeID);
         Path path = Paths.get(directory, fileName);
@@ -101,6 +108,7 @@ public class FileServiceImpl {
         return new File(directory, fileName, extension, fileBaseName);
     }
 
+    @Override
     public String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf(".");
         if(dotIndex < 0) {
@@ -109,6 +117,7 @@ public class FileServiceImpl {
         return fileName.substring(dotIndex+1);
     }
 
+    @Override
     public String handleFileName(String fileName, UUID id)
             throws InvalidFileException {
 
@@ -126,6 +135,7 @@ public class FileServiceImpl {
         return cleanFileName;
     }
 
+    @Override
     public boolean isValidExtension(String fileName)
             throws InvalidFileException {
         String fileExtension = getFileExtension(fileName);
