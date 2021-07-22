@@ -10,5 +10,5 @@ public class InitiatePasswordDTO {
 
     @NotBlank
     @Email
-    private String email
+    private String email;
 }
