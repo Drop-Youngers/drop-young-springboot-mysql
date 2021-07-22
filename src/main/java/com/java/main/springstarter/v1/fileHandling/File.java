@@ -47,6 +47,10 @@ public class File extends InitiatorAudit {
     @Enumerated(EnumType.STRING)
     private EFileStatus status;
 
+    public File(String directory, String fileName, String extension, String fileBaseName) {
+        super();
+    }
+
 
     public String getUrl() {
         return "http://localhost:8080/api/v1/files/load-file/" + "/" + this.getName();

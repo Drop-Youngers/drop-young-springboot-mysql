@@ -16,7 +16,6 @@ import java.util.UUID;
 
 public interface IUserService {
 
-
     public List<User> getAll();
 
     public Page<User> getAll(Pageable pageable);

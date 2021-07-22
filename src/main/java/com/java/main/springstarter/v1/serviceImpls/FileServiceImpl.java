@@ -2,6 +2,7 @@ package com.java.main.springstarter.v1.serviceImpls;
 
 import com.java.main.springstarter.v1.enums.EFileSizeType;
 import com.java.main.springstarter.v1.enums.EFileStatus;
+import com.java.main.springstarter.v1.exceptions.InvalidFileException;
 import com.java.main.springstarter.v1.exceptions.ResourceNotFoundException;
 import com.java.main.springstarter.v1.fileHandling.File;
 import com.java.main.springstarter.v1.fileHandling.FileStorageService;
@@ -15,7 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -79,7 +84,7 @@ public class FileServiceImpl {
         return this.fileRepository.findAllByStatus(pageable, status);
     }
 
-    public File uploadFile(MultipartFile file, String directory, UUID appointeeID) throws InvalidFileException, IOException{
+    public File uploadFile(MultipartFile file, String directory, UUID appointeeID) throws InvalidFileException, IOException {
         String fileName = handleFileName(Objects.requireNonNull(file.getOriginalFilename()), appointeeID);
         Path path = Paths.get(directory, fileName);
         System.out.println(path.toString());
@@ -93,7 +98,7 @@ public class FileServiceImpl {
                 0,
                 fileName.length()-extension.length()-1
         );
-        return new rw.gov.primature.tms.utils.File(directory, fileName, extension, fileBaseName);
+        return new File(directory, fileName, extension, fileBaseName);
     }
 
     private String getFileExtension(String fileName) {
