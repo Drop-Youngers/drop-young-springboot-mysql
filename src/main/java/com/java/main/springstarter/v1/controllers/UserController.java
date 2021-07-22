@@ -1,21 +1,28 @@
 package com.java.main.springstarter.v1.controllers;
 
+import com.java.main.springstarter.v1.dtos.SignUpDTO;
+import com.java.main.springstarter.v1.exceptions.BadRequestException;
+import com.java.main.springstarter.v1.models.Role;
 import com.java.main.springstarter.v1.models.User;
 import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.repositories.IRoleRepository;
 import com.java.main.springstarter.v1.security.JwtTokenProvider;
 import com.java.main.springstarter.v1.services.IUserService;
 import com.java.main.springstarter.v1.utils.Constants;
+import org.apache.catalina.Cluster;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,12 +31,15 @@ import java.util.UUID;
 public class UserController {
 
     private  IUserService userService;
+    private static final ModelMapper modelMapper = new ModelMapper();
+    private  IRoleRepository roleRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private  JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(IUserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public UserController(IUserService userService, IRoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -58,32 +68,29 @@ public class UserController {
     }
 
     @PostMapping(path = "/register")
-    public ResponseEntity<Response> register(@RequestBody @Valid SignUpDTO signUpRequest){
+    public ResponseEntity<ApiResponse> register(@RequestBody @Valid SignUpDTO dto){
 
-        User user = new User(signUpRequest.getEmail(),signUpRequest.getFirstName(),signUpRequest.getLastName(),signUpRequest.getMobile(),signUpRequest.getNationalId(),signUpRequest.getGender(),signUpRequest.getPassword());
+        User user = new User();
 
-        boolean userExists = userRepository.findByEmail(user.getEmail()).isPresent();
-        if(user.getEmail() != null && userExists){
-            throw new ApiRequestException("Email is already in use");
-        }
+        String encodedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+        Role role = roleRepository.findByName(dto.getRole()).orElseThrow(
+                ()-> new BadRequestException("User Role not set"));
 
-        if(userRepository.existsByMobile(user.getMobile())){
-            throw new ApiRequestException("Phone number already in use");
-        }
-
-        if(userRepository.existsByNationalId(user.getNationalId())){
-            throw new ApiRequestException("NationalID number already in use");
-        }
-
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-
+        user.setEmail(dto.getEmail());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setGender(dto.getGender());
+        user.setMobile(dto.getMobile());
         user.setPassword(encodedPassword);
+        user.setRoles(Collections.singleton(role));
 
-        Role userRole = roleRepository.findByName(signUpRequest.getRole()).orElseThrow(()-> new ApiRequestException("User Role not set"));
+        User entity = this.userService.create(user);
 
-        user.setRoles(Collections.singleton(userRole));
-        userRepository.save(user);
+        return ResponseEntity.ok(new ApiResponse(true, entity));
+    }
 
-        return new ResponseEntity<>(new Response("Registered successfully", ZonedDateTime.now(), true), HttpStatus.CREATED);
+
+    private User convertDTO(SignUpDTO dto) {
+        return modelMapper.map(dto, User.class);
     }
 }

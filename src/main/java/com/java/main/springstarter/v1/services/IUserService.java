@@ -8,8 +8,7 @@ import com.java.main.springstarter.v1.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -39,6 +38,8 @@ public interface IUserService {
     public Page<User> searchUser(Pageable pageable, String searchKey);
 
     public User getLoggedInUser();
+
+    public User getByEmail(String email);
 
     public User changeStatus(UUID id, EUserStatus status);
 

@@ -119,6 +119,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public User getByEmail(String email) {
+        return this.userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", email));
+    }
+
+
+
+    @Override
     public User changeStatus(UUID id, EUserStatus status) {
         User entity = this.userRepository.findById(id).orElseThrow(
                 () ->  new ResourceNotFoundException("User", "id", id.toString()));
