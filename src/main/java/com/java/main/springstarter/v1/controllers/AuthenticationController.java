@@ -2,6 +2,7 @@ package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.dtos.InitiatePasswordDTO;
 import com.java.main.springstarter.v1.dtos.SignInDTO;
+import com.java.main.springstarter.v1.enums.EUserStatus;
 import com.java.main.springstarter.v1.models.User;
 import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.payload.JwtAuthenticationResponse;
