@@ -1,4 +1,4 @@
-package com.java.main.springstarter.security;
+package com.java.main.springstarter.v1.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

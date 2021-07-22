@@ -1,4 +1,4 @@
-package com.java.main.springstarter.config;
+package com.java.main.springstarter.v1.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -64,7 +64,7 @@ public class SwaggerApiDoc extends WebMvcConfigurationSupport {
                     public String getApplicationBasePath() {
                         return "/spring-starter";
                     }
-                }).select().apis(RequestHandlerSelectors.basePackage("com.java.main.springstarter.controllers"))
+                }).select().apis(RequestHandlerSelectors.basePackage("com.java.main.springstarter.v1.controllers"))
                 .paths(PathSelectors.any()).build().apiInfo(apiInfo()).securitySchemes(Arrays.asList(apiKey()))
                 .securityContexts(Collections.singletonList(securityContext()));
     }

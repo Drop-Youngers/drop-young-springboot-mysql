@@ -1,4 +1,4 @@
-package com.java.main.springstarter.audits;
+package com.java.main.springstarter.v1.audits;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

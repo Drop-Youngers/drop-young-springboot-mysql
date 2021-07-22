@@ -1,9 +1,9 @@
-package com.java.main.springstarter.models;
+package com.java.main.springstarter.v1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.java.main.springstarter.audits.TimestampAudit;
-import com.java.main.springstarter.enums.EGender;
-import com.java.main.springstarter.enums.EUserStatus;
+import com.java.main.springstarter.v1.audits.TimestampAudit;
+import com.java.main.springstarter.v1.enums.EGender;
+import com.java.main.springstarter.v1.enums.EUserStatus;
 import lombok.*;
 
 import javax.persistence.*;

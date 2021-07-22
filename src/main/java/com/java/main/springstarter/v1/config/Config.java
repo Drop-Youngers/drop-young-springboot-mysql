@@ -1,4 +1,4 @@
-package com.java.main.springstarter.config;
+package com.java.main.springstarter.v1.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

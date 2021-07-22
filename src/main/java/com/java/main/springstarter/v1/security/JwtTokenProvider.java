@@ -1,9 +1,9 @@
-package com.java.main.springstarter.security;
+package com.java.main.springstarter.v1.security;
 
 import io.jsonwebtoken.*;
 
-import com.java.main.springstarter.models.User;
-import com.java.main.springstarter.repositories.IUserRepository;
+import com.java.main.springstarter.v1.models.User;
+import com.java.main.springstarter.v1.repositories.IUserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

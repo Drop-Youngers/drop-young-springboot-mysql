@@ -1,7 +1,7 @@
-package com.java.main.springstarter.models;
+package com.java.main.springstarter.v1.models;
 
 
-import com.java.main.springstarter.enums.ERole;
+import com.java.main.springstarter.v1.enums.ERole;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 

@@ -1,7 +1,7 @@
-package com.java.main.springstarter.security;
+package com.java.main.springstarter.v1.security;
 
-import com.java.main.springstarter.models.User;
-import com.java.main.springstarter.repositories.IUserRepository;
+import com.java.main.springstarter.v1.models.User;
+import com.java.main.springstarter.v1.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

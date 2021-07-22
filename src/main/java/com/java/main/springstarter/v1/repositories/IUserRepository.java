@@ -1,7 +1,7 @@
-package com.java.main.springstarter.repositories;
+package com.java.main.springstarter.v1.repositories;
 
-import com.java.main.springstarter.models.Role;
-import com.java.main.springstarter.models.User;
+import com.java.main.springstarter.v1.models.Role;
+import com.java.main.springstarter.v1.models.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
