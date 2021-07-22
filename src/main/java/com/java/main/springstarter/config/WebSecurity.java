@@ -1,5 +1,6 @@
 package com.java.main.springstarter.config;
 
+import com.java.main.springstarter.security.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    CustomUserDetailsService userService;
+    private CustomUserDetailsService userService;
 
 
     @Autowired
