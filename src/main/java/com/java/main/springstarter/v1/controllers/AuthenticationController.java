@@ -2,30 +2,30 @@ package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.security.JwtTokenProvider;
 import com.java.main.springstarter.v1.services.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/auth")
 public class AuthenticationController {
+
     private IUserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+
     @Autowired
-    private RoleRepository roleRepository;
-
-
-
+    public AuthenticationController(IUserService userService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+        this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+    }
 
 
     @PostMapping(path = "/signin")
-    @ApiOperation(value = "signin into your account")
     public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SignInDTO signInRequest){
 
         Authentication authentication = authenticationManager.authenticate(
