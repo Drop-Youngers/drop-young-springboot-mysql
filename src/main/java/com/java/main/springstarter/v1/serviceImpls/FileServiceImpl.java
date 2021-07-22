@@ -31,7 +31,7 @@ public class FileServiceImpl  implements IFileService {
     private final IFileRepository fileRepository;
     private final FileStorageService fileStorageService;
 
-    @Value("${upload.extensions}")
+    @Value("${uploads.extensions}")
     private String extensions;
 
     @Autowired

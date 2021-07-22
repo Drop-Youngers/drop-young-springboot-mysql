@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class FileStorageService  {
 
 
-    @Value("${upload.directory}")
+    @Value("${uploads.directory}")
     private String root;
 
     public void init() {

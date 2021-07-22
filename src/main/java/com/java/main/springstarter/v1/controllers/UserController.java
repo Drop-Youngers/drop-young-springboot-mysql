@@ -45,7 +45,7 @@ public class UserController {
     private final FileStorageService fileStorageService;
     private final IFileService fileService;
 
-    @Value("${upload.directory.user_profiles}")
+    @Value("${uploads.directory.user_profiles}")
     private String directory;
 
     @Autowired
