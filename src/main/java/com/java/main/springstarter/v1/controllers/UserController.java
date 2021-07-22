@@ -19,12 +19,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -99,11 +102,23 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse(true, entity));
     }
 
+    @PutMapping(path="/{id}/upload-profile")
+    public ResponseEntity<ApiResponse> uploadProfileImage(
+            @PathVariable(value = "id") UUID id,
+            @RequestParam("file") MultipartFile document
+    ) {
+        this.userService.getById(id);
+        File file = this.fileStorageService.create(document, directory);
 
+        Document updated = this.documentService.updateFile(id, file);
+
+        return ResponseEntity.ok(new ApiResponse(true, "File saved successfully", updated));
+
+    }
 
     @GetMapping("/load-file/{filename:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> displayDocumentFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> loadProfileImage(@PathVariable String filename) {
 
         Resource file = this.fileStorageService.load(directory, filename);
 
