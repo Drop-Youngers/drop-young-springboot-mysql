@@ -45,7 +45,7 @@ public class JwtTokenProvider {
 
         String token = Jwts .builder() .setId(authUser.getId()+"")
                 .setSubject(userPrincipal.getId()+"")
-                .claim("authorities",grantedAuthorities)
+                .claim("authorities", grantedAuthorities)
                 .claim("user",authUser)
                 .setIssuedAt(new
                         Date(System.currentTimeMillis())) .setExpiration(expiryDate)
