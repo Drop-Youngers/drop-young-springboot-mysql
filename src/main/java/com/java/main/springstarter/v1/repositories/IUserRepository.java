@@ -12,11 +12,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IUserRepository extends JpaRepository<User, UUID> {
+
+    Optional<User> findById(UUID userID);
     Optional<User> findByEmail(String email);
     Optional<User> findByEmailOrMobile(String email, String mobile);
-    Optional<User> findById(UUID userID);
-    Boolean existsByMobile(String mobile);
-    Page<User> findByRolesIn(Pageable pageable, List<Role> roleList);
+    Page<User> findByRoles(Pageable pageable, List<Role> roleList);
 
     @Query("SELECT u FROM User u" +
             " WHERE (lower(u.firstName)  LIKE ('%' || lower(:searchKey) || '%')) " +
