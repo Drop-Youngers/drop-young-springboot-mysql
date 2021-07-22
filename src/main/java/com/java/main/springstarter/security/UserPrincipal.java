@@ -8,10 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,12 +30,14 @@ public class UserPrincipal implements UserDetails {
 
     private String mobile;
 
+    private EGender gender;
 
 
     @JsonIgnore
     private String password;
 
     private EUserStatus status;
+
 
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -46,7 +51,6 @@ public class UserPrincipal implements UserDetails {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getMobile(),
-                user.getNationalId(),
                 user.getGender(),
                 user.getPassword(),
                 user.getStatus(),
