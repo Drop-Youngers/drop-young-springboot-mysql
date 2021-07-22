@@ -39,15 +39,9 @@ public interface IFileService {
 
         public File uploadFile(MultipartFile file, String directory, UUID appointeeID) throws InvalidFileException, IOException;
 
-        private String getFileExtension(String fileName) {
-            int dotIndex = fileName.lastIndexOf(".");
-            if(dotIndex < 0) {
-                return null;
-            }
-            return fileName.substring(dotIndex+1);
-        }
+        public String getFileExtension(String fileName);
 
-        String handleFileName(String fileName, UUID id) throws InvalidFileException;
+        public String handleFileName(String fileName, UUID id) throws InvalidFileException;
 
-        boolean isValidExtension(String fileName) throws InvalidFileException;
+        public boolean isValidExtension(String fileName) throws InvalidFileException;
 }

@@ -101,7 +101,7 @@ public class FileServiceImpl {
         return new File(directory, fileName, extension, fileBaseName);
     }
 
-    private String getFileExtension(String fileName) {
+    public String getFileExtension(String fileName) {
         int dotIndex = fileName.lastIndexOf(".");
         if(dotIndex < 0) {
             return null;
@@ -109,7 +109,7 @@ public class FileServiceImpl {
         return fileName.substring(dotIndex+1);
     }
 
-    String handleFileName(String fileName, UUID id)
+    public String handleFileName(String fileName, UUID id)
             throws InvalidFileException {
 
         String cleanFileName = fileName.replaceAll("[^A-Za-z0-9.()]", "");
@@ -126,7 +126,7 @@ public class FileServiceImpl {
         return cleanFileName;
     }
 
-    boolean isValidExtension(String fileName)
+    public boolean isValidExtension(String fileName)
             throws InvalidFileException {
         String fileExtension = getFileExtension(fileName);
 
