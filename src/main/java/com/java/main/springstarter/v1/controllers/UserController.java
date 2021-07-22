@@ -1,31 +1,27 @@
 package com.java.main.springstarter.v1.controllers;
 
+import com.java.main.springstarter.v1.repositories.IRoleRepository;
+import com.java.main.springstarter.v1.security.JwtTokenProvider;
+import com.java.main.springstarter.v1.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
-    @Autowired
-    private  UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
+    private IUserServ
+    ice userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
-    @Autowired
-    private  JwtTokenProvider jwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(UserService userService,JwtTokenProvider jwtTokenProvider) {
+    public UserController(IUserService userService,  BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
