@@ -49,7 +49,7 @@ public class AuthenticationController {
 
 
     @PostMapping(path = "/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SignInDTO dto){
+    public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SignInDTO dto) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
@@ -58,9 +58,9 @@ public class AuthenticationController {
 
         String jwt = null;
 
-        try{
+        try {
             jwt = jwtTokenProvider.generateToken(authentication);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -68,32 +68,32 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/initiate-reset-password")
-    public ResponseEntity<ApiResponse> initiateResetPassword(@RequestBody @Valid InitiatePasswordDTO dto){
+    public ResponseEntity<ApiResponse> initiateResetPassword(@RequestBody @Valid InitiatePasswordDTO dto) {
         User user = this.userService.getByEmail(dto.getEmail());
-        user.setActivationCode(Utility.randomUUID(6,0,'N'));
+        user.setActivationCode(Utility.randomUUID(6, 0, 'N'));
         user.setStatus(EUserStatus.RESET);
 
         this.userService.create(user);
 
-        mailService.sendResetPasswordMail(user.getEmail(),user.getFirstName()+" "+user.getLastName(),user.getActivationCode());
+        mailService.sendResetPasswordMail(user.getEmail(), user.getFirstName() + " " + user.getLastName(), user.getActivationCode());
 
         return ResponseEntity.ok(new ApiResponse(true, "Please check your mail and activate account"));
     }
 
 
     @PostMapping(path = "/reset-password")
-    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid ResetPasswordDTO dto){
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid ResetPasswordDTO dto) {
         User user = this.userService.getByEmail(dto.getEmail());
 
-        if(Utility.isCodeValid(user.getActivationCode(), dto.getActivationCode()) &&
-                (user.getStatus().equals(EUserStatus.RESET)) || user.getStatus().equals(EUserStatus.PENDING))
-        {
+        if (Utility.isCodeValid(user.getActivationCode(), dto.getActivationCode()) &&
+                (user.getStatus().equals(EUserStatus.RESET)) || user.getStatus().equals(EUserStatus.PENDING)) {
             user.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
             user.setActivationCode(Utility.randomUUID(6, 0, 'N'));
             user.setStatus(EUserStatus.ACTIVE);
             this.userService.create(user);
-        }else{
+        } else {
             throw new AppException("Invalid code or account status");
         }
-        return ResponseEntity.ok(new ApiResponse(true,"Password successfully reset"));
+        return ResponseEntity.ok(new ApiResponse(true, "Password successfully reset"));
     }
+}
