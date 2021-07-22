@@ -87,7 +87,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean delete(UUID id) {
-        User user = this.userRepository.findById(id).orElseThrow(() ->
+        this.userRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException("User", "id", id));
 
         this.userRepository.deleteById(id);
@@ -96,36 +96,55 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public List<User> getAllByRole(ERole role) {
-        return null;
+        return this.userRepository.findByRoles(role);
     }
 
     @Override
     public Page<User> getAllByRolePaginated(Pageable pageable, ERole role) {
-        return null;
+        return this.userRepository.findByRoles(pageable, role);
     }
 
     @Override
     public List<User> searchUser(String searchKey) {
-        return null;
+        return this.userRepository.searchUser(searchKey);
     }
 
     @Override
-    public Page<User> searchUserPaginated(String searchKey) {
-        return null;
+    public Page<User> searchUserPaginated(Pageable pageable, String searchKey) {
+        return this.userRepository.searchUser(pageable, searchKey);
     }
 
     @Override
     public User getLoggedInUser() {
-        return null;
+        String email;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(principal instanceof UserDetails){
+            email = ((UserDetails) principal).getUsername();
+        }else{
+            email = principal.toString();
+        }
+
+        return userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", email));
     }
 
     @Override
     public User changeStatus(UUID id, EUserStatus status) {
-        return null;
+        User entity = this.userRepository.findById(id).orElseThrow(
+                () ->  new ResourceNotFoundException("User", "id", id.toString()));
+
+        entity.setStatus(status);
+
+        return  this.userRepository.save(entity);
     }
 
     @Override
-    public User changeProfileImage(UUID userID, File file) {
-        return null;
+    public User changeProfileImage(UUID id, File file) {
+        User entity = this.userRepository.findById(id).orElseThrow(
+                () ->  new ResourceNotFoundException("Document", "id", id.toString()));
+
+        entity.setProfileImage(file);
+        return  this.userRepository.save(entity);
     }
 }

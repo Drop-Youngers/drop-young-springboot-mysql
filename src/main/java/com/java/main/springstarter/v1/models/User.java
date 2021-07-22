@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.main.springstarter.v1.audits.TimestampAudit;
 import com.java.main.springstarter.v1.enums.EGender;
 import com.java.main.springstarter.v1.enums.EUserStatus;
+import com.java.main.springstarter.v1.fileHandling.File;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -53,8 +56,13 @@ public class User extends TimestampAudit {
     @Column(name = "status")
     private EUserStatus status = EUserStatus.PENDING;
 
-    @Column(name = "profile_url")
-    private String profileUrl;
+    @JoinColumn(name="profile_image_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private File profileImage;
+
+
+
 
 
     @ManyToMany(fetch = FetchType.EAGER)

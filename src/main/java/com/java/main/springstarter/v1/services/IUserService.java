@@ -36,12 +36,12 @@ public interface IUserService {
 
     public List<User> searchUser(String searchKey);
 
-    public Page<User> searchUserPaginated(String searchKey);
+    public Page<User> searchUserPaginated(Pageable pageable, String searchKey);
 
     public User getLoggedInUser();
 
     public User changeStatus(UUID id, EUserStatus status);
 
-    public User changeProfileImage(UUID userID, File file);
+    public User changeProfileImage(UUID id, File file);
 
 }
