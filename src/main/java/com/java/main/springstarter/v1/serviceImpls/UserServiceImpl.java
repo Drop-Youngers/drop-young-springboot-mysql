@@ -72,6 +72,7 @@ public class UserServiceImpl implements IUserService {
         entity.setMobile(user.getMobile());
         entity.setGender(user.getGender());
 
+
         return this.userRepository.save(entity);
     }
 
