@@ -2,6 +2,7 @@ package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.dtos.SignUpDTO;
 import com.java.main.springstarter.v1.exceptions.BadRequestException;
+import com.java.main.springstarter.v1.fileHandling.FileStorageService;
 import com.java.main.springstarter.v1.models.Role;
 import com.java.main.springstarter.v1.models.User;
 import com.java.main.springstarter.v1.payload.ApiResponse;
@@ -12,6 +13,8 @@ import com.java.main.springstarter.v1.utils.Constants;
 import org.apache.catalina.Cluster;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,18 +33,25 @@ import java.util.UUID;
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
 
-    private  IUserService userService;
+    private final IUserService userService;
     private static final ModelMapper modelMapper = new ModelMapper();
-    private  IRoleRepository roleRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private  JwtTokenProvider jwtTokenProvider;
+    private final IRoleRepository roleRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final FileStorageService fileStorageService;
+
+    @Value("${upload.directory.user_profiles}")
+    private String directory;
 
     @Autowired
-    public UserController(IUserService userService, IRoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public UserController(IUserService userService, IRoleRepository roleRepository,
+                          BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider,
+                          FileStorageService fileStorageService) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping(path = "/current-user")
@@ -89,6 +99,18 @@ public class UserController {
         return ResponseEntity.ok(new ApiResponse(true, entity));
     }
 
+
+
+    @GetMapping("/load-file/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> displayDocumentFile(@PathVariable String filename) {
+
+        Resource file = this.fileStorageService.load(directory, filename);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
+                .body(file);
+    }
 
     private User convertDTO(SignUpDTO dto) {
         return modelMapper.map(dto, User.class);

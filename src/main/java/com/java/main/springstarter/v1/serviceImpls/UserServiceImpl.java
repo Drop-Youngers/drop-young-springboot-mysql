@@ -145,5 +145,6 @@ public class UserServiceImpl implements IUserService {
 
         entity.setProfileImage(file);
         return  this.userRepository.save(entity);
+
     }
 }
