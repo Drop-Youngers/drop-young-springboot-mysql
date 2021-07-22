@@ -62,7 +62,7 @@ public class SwaggerApiDoc extends WebMvcConfigurationSupport {
                 .pathProvider(new RelativePathProvider(servletContext) {
                     @Override
                     public String getApplicationBasePath() {
-                        return "/spring-starter";
+                        return "/";
                     }
                 }).select().apis(RequestHandlerSelectors.basePackage("com.java.main.springstarter.v1.controllers"))
                 .paths(PathSelectors.any()).build().apiInfo(apiInfo()).securitySchemes(Arrays.asList(apiKey()))

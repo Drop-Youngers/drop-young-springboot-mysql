@@ -74,7 +74,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                         "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js").permitAll()
                 .antMatchers(
-                        "/api/v1/auth/**").permitAll()
+                        "/api/v1/auth/**", "/api/v1/users/**").permitAll()
                 .antMatchers( "/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
