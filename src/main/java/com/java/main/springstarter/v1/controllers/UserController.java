@@ -50,9 +50,9 @@ public class UserController {
         return userService.getAll(pageable);
 
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ApiResponse> getById (@PathVariable(value="id") UUID id){
-        return  ResponseEntity.ok(new ApiResponse(true,this.userService.getById(id)));
+    @GetMapping(path="/{id}")
+    public ResponseEntity<User> getById(@PathVariable(value = "id") UUID id) {
+        return ResponseEntity.ok(this.institutionService.getById(id));
     }
 
     @PutMapping(path = "/{userID}")
