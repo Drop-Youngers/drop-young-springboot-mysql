@@ -1,11 +1,18 @@
 package com.java.main.springstarter.v1.controllers;
 
+import com.java.main.springstarter.v1.dtos.InitiatePasswordDTO;
+import com.java.main.springstarter.v1.dtos.SignInDTO;
+import com.java.main.springstarter.v1.models.User;
+import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.payload.JwtAuthenticationResponse;
 import com.java.main.springstarter.v1.security.JwtTokenProvider;
 import com.java.main.springstarter.v1.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +38,10 @@ public class AuthenticationController {
 
 
     @PostMapping(path = "/signin")
-    public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SignInDTO signInRequest){
+    public ResponseEntity<JwtAuthenticationResponse> signin(@Valid @RequestBody SignInDTO dto){
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        signInRequest.getEmail(),
-                        signInRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -52,10 +57,8 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/initiate-reset-password")
-    @ApiOperation(value = "Reset account password")
-    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid UserActiationDTO resetPasswordDTO){
-        User user = userRepository.findByEmail(resetPasswordDTO.getEmaill()).orElseThrow(() -> new AppException("user with this email "+resetPasswordDTO.getEmaill()+" is not found"));
-
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid InitiatePasswordDTO dto){
+        User user = this.userService.getByEmail(dto.getEmail());
         user.setActivationCode(Utility.randomUUID(6,0,'N'));
         user.setStatus(EUserStatus.RESET);
 

@@ -63,6 +63,8 @@ public class User extends TimestampAudit {
     private File profileImage;
 
 
+    @Column(name="activation_code")
+    private String activationCode;
 
 
 
