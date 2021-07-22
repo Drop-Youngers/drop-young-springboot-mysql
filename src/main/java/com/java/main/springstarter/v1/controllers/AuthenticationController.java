@@ -1,6 +1,8 @@
 package com.java.main.springstarter.v1.controllers;
 
+import com.java.main.springstarter.v1.security.JwtTokenProvider;
 import com.java.main.springstarter.v1.services.IUserService;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,15 +21,6 @@ public class AuthenticationController {
     private RoleRepository roleRepository;
 
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
-    @Autowired
-    private  UserRepository userRepository;
-
-    @Autowired
-    private MailService mailService;
 
 
 
