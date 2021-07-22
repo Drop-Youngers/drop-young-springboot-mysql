@@ -1,6 +1,7 @@
 package com.java.main.springstarter.config;
 
 
+import com.java.main.springstarter.security.UserPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -30,6 +31,10 @@ class SpringSecurityAuditAwareImpl implements AuditorAware<UUID> {
                 || authentication instanceof AnonymousAuthenticationToken) {
             return Optional.empty();
         }
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        return Optional.ofNullable(userPrincipal.getId());
 
     }
 }
