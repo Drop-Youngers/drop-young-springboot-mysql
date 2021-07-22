@@ -1,5 +1,5 @@
 package com.java.main.springstarter.audits;
 
-public abstract class InitiatorAudit {
+public abstract class InitiatorAudit extends TimestampAudit{
 
 }
