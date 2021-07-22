@@ -1,6 +1,7 @@
 package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.dtos.InitiatePasswordDTO;
+import com.java.main.springstarter.v1.dtos.ResetPasswordDTO;
 import com.java.main.springstarter.v1.dtos.SignInDTO;
 import com.java.main.springstarter.v1.enums.EUserStatus;
 import com.java.main.springstarter.v1.models.User;
@@ -62,7 +63,7 @@ public class AuthenticationController {
     }
 
     @PostMapping(path = "/initiate-reset-password")
-    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid InitiatePasswordDTO dto){
+    public ResponseEntity<ApiResponse> initiateResetPassword(@RequestBody @Valid InitiatePasswordDTO dto){
         User user = this.userService.getByEmail(dto.getEmail());
         user.setActivationCode(Utility.randomUUID(6,0,'N'));
         user.setStatus(EUserStatus.RESET);
@@ -71,15 +72,17 @@ public class AuthenticationController {
 
         mailService.sendResetPasswordMail(user.getEmail(),user.getFirstName()+" "+user.getLastName(),user.getActivationCode());
 
-        return ResponseEntity.ok(new ApiResponse(true, "Successfully registered, please check your mail and activate account"));
+        return ResponseEntity.ok(new ApiResponse(true, "Please check your mail and activate account"));
     }
 
 
     @PostMapping(path = "/reset-password")
-    @ApiOperation(value = "confirm your password")
-    public ResponseEntity<ApiResponse> confirmPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO){
-        User user = userRepository.findByEmail(resetPasswordDTO.getEmail()).orElseThrow(() -> new EntityNotFoundException(User.class,"email",resetPasswordDTO.getEmail()));
-        if(Utility.isCodeValid(user.getActivationCode(),resetPasswordDTO.getActivationCode()) && (user.getStatus().equals(EUserStatus.RESET)) || user.getStatus().equals(EUserStatus.PENDING)){
+    public ResponseEntity<ApiResponse> resetPassword(@RequestBody @Valid ResetPasswordDTO dto){
+        User user = this.userService.getByEmail(dto.getEmail());
+
+        if(Utility.isCodeValid(user.getActivationCode(), dto.getActivationCode()) &&
+                (user.getStatus().equals(EUserStatus.RESET)) || user.getStatus().equals(EUserStatus.PENDING))
+        {
             user.setPassword(bCryptPasswordEncoder.encode(resetPasswordDTO.getPassword()));
             user.setActivationCode(Utility.randomUUID(6, 0, 'N'));
             user.setStatus(EUserStatus.ACTIVE);

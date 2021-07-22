@@ -60,4 +60,9 @@ public class Utility {
     }
 
 
+    public static boolean isCodeValid(String activationCode, String sentCode) {
+        return activationCode.trim().equalsIgnoreCase(sentCode.trim());
+    }
+
+
 }
