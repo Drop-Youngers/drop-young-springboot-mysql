@@ -1,6 +1,5 @@
 package com.java.main.springstarter.v1.services;
 
-
 import com.java.main.springstarter.v1.enums.ERole;
 import com.java.main.springstarter.v1.enums.EUserStatus;
 import com.java.main.springstarter.v1.models.User;
@@ -12,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.UUID;
 
-@Service
 public interface IUserService {
     public User getUser(UUID id);
     public User deleteUser(UUID id);
