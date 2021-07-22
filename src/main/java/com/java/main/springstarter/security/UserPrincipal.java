@@ -3,6 +3,7 @@ package com.java.main.springstarter.security;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.java.main.springstarter.enums.EGender;
 import com.java.main.springstarter.enums.EUserStatus;
+import com.java.main.springstarter.models.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
