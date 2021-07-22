@@ -1,6 +1,7 @@
 package com.java.main.springstarter.config;
 
 import com.java.main.springstarter.security.CustomUserDetailsService;
+import com.java.main.springstarter.security.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
