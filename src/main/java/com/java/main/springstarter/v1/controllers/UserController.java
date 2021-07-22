@@ -1,44 +1,58 @@
 package com.java.main.springstarter.v1.controllers;
 
+import com.java.main.springstarter.v1.models.User;
+import com.java.main.springstarter.v1.payload.ApiResponse;
 import com.java.main.springstarter.v1.repositories.IRoleRepository;
 import com.java.main.springstarter.v1.security.JwtTokenProvider;
 import com.java.main.springstarter.v1.services.IUserService;
+import com.java.main.springstarter.v1.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/users")
 public class UserController {
 
-    private IUserServ
-    ice userService;
+    private  IUserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private JwtTokenProvider jwtTokenProvider;
+    private  JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public UserController(IUserService userService,  BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public UserController(IUserService userService, BCryptPasswordEncoder bCryptPasswordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @GetMapping(path = "/current")
+    @GetMapping(path = "/current-user")
     public ResponseEntity<ApiResponse> currentlyLoggedInUser(){
-        return ResponseEntity.ok(new ApiResponse(true,"user found",userService.getLoggedInUser()));
+        return ResponseEntity.ok(new ApiResponse(true,  userService.getLoggedInUser()));
     }
 
     @GetMapping
-    public Page<User> getUsers(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
-                               @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size) {
-        return userService.getAllUsers(page,size);
+    public List<User> getAllUsers() {
+        return this.userService.getAll();
     }
 
-    @GetMapping(path = "/{userID}")
-    public ResponseEntity<ApiResponse> getUser(@ApiParam(value="Get user by id",required = true) @PathVariable("userID") UUID userID){
-        return  ResponseEntity.ok(new ApiResponse(true,"user found",this.userService.getUser(userID)));
+    @GetMapping
+    public Page<User> getAllUsers(@RequestParam(value = "page", defaultValue = Constants.DEFAULT_PAGE_NUMBER) int page,
+                                  @RequestParam(value = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int limit
+    ) {
+        Pageable pageable = (Pageable) PageRequest.of(page, limit, Sort.Direction.ASC, "id");
+        return userService.getAll(pageable);
+
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ApiResponse> getById (@PathVariable(value="id") UUID id){
+        return  ResponseEntity.ok(new ApiResponse(true,this.userService.getById(id)));
     }
 
     @PutMapping(path = "/{userID}")

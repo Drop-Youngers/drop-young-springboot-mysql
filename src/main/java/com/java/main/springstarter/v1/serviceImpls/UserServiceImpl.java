@@ -37,7 +37,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<User> getAllPaginated(Pageable pageable) {
+    public Page<User> getAll(Pageable pageable) {
         return this.userRepository.findAll(pageable);
     }
 
@@ -89,7 +89,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<User> getAllByRolePaginated(Pageable pageable, ERole role) {
+    public Page<User> getAllByRole(Pageable pageable, ERole role) {
         return this.userRepository.findByRoles(pageable, role);
     }
 
@@ -99,7 +99,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Page<User> searchUserPaginated(Pageable pageable, String searchKey) {
+    public Page<User> searchUser(Pageable pageable, String searchKey) {
         return this.userRepository.searchUser(pageable, searchKey);
     }
 

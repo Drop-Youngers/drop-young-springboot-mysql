@@ -20,7 +20,7 @@ public interface IUserService {
 
     public List<User> getAll();
 
-    public Page<User> getAllPaginated(Pageable pageable);
+    public Page<User> getAll(Pageable pageable);
 
     public User getById(UUID id);
 
@@ -32,11 +32,11 @@ public interface IUserService {
 
     public List<User> getAllByRole(ERole role);
 
-    public Page<User> getAllByRolePaginated(Pageable pageable, ERole role);
+    public Page<User> getAllByRole(Pageable pageable, ERole role);
 
     public List<User> searchUser(String searchKey);
 
-    public Page<User> searchUserPaginated(Pageable pageable, String searchKey);
+    public Page<User> searchUser(Pageable pageable, String searchKey);
 
     public User getLoggedInUser();
 

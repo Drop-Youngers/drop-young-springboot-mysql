@@ -2,23 +2,23 @@ package com.java.main.springstarter.v1.utils;
 
 import com.java.main.springstarter.v1.exceptions.BadRequestException;
 
-public class ConstantsUtility {
+public interface Constants {
     /**
      * Default Pagination Page Number
      */
-    public static String DEFAULT_PAGE_NUMBER = "0";
+    public  String DEFAULT_PAGE_NUMBER = "0";
 
 
     /**
      * Default Pagination Page Size
      */
-    public static String DEFAULT_PAGE_SIZE = "100";
+    public  String DEFAULT_PAGE_SIZE = "100";
 
 
     /**
      * Maximum Page Size
      */
-    public static int MAX_PAGE_SIZE = 1000;
+    public  int MAX_PAGE_SIZE = 1000;
 
 
     /**
@@ -31,8 +31,8 @@ public class ConstantsUtility {
             throw new BadRequestException("Page number is less than zero.");
         }
 
-        if (pageSize > ConstantsUtility.MAX_PAGE_SIZE) {
-            throw new BadRequestException("Page size is greater than " + ConstantsUtility.MAX_PAGE_SIZE);
+        if (pageSize > Constants.MAX_PAGE_SIZE) {
+            throw new BadRequestException("Page size is greater than " + Constants.MAX_PAGE_SIZE);
         }
     }
 }
