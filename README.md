@@ -40,5 +40,5 @@ If you found this template useful, please star the project or edit this ReadMe t
 - [@divinirakiza](https://www.github.com/divinirakiza)
 
 
-Copyright (C) [2021] [Drop-Youngers]
+Copyright (C) [2021] [Drop-Youngers](https://www.github.com/Drop-Youngers)
 
