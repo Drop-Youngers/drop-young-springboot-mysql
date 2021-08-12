@@ -1,6 +1,6 @@
 # Drop young SpringBoot-Mysql
 
-This is a conventionalized template for developping a server-side application (RESTful) on top of TypeScript + MongoDB.
+This is a conventionalized template for developing a server-side application (RESTful) on top of SpringBoot + Mysql.
 
 ## Contributing
 
