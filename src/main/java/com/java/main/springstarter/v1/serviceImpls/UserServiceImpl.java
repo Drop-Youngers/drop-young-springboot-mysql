@@ -6,11 +6,11 @@ import com.java.main.springstarter.v1.exceptions.BadRequestException;
 import com.java.main.springstarter.v1.exceptions.ResourceNotFoundException;
 import com.java.main.springstarter.v1.fileHandling.File;
 import com.java.main.springstarter.v1.models.User;
-import com.java.main.springstarter.v1.repositories.IRoleRepository;
+import com.java.main.springstarter.v1.models.Verification;
 import com.java.main.springstarter.v1.repositories.IUserRepository;
+import com.java.main.springstarter.v1.repositories.IVerificationRepository;
 import com.java.main.springstarter.v1.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,10 +26,12 @@ import java.util.UUID;
 public class UserServiceImpl implements IUserService {
 
     private final IUserRepository userRepository;
+    private final IVerificationRepository verificationRepository;
 
     @Autowired
-    public UserServiceImpl(IUserRepository userRepository) {
+    public UserServiceImpl(IUserRepository userRepository, IVerificationRepository verificationRepository) {
         this.userRepository = userRepository;
+        this.verificationRepository = verificationRepository;
     }
 
     @Override
@@ -53,14 +55,18 @@ public class UserServiceImpl implements IUserService {
         Optional<User> userOptional = this.userRepository.findByEmail(user.getEmail());
         if (userOptional.isPresent())
             throw new BadRequestException(String.format("User with email '%s' already exists", user.getEmail()));
-
-        return this.userRepository.save(user);
+        User entity = this.userRepository.save(user);
+        Verification verification = new Verification();
+        verification.setUser(entity);
+        entity.setVerification(verification);
+        this.verificationRepository.save(verification);
+        return entity;
     }
 
     @Override
     public User update(UUID id, User user) {
         User entity = this.userRepository.findById(id).orElseThrow(
-                () ->  new ResourceNotFoundException("User", "id", id.toString()));
+                () -> new ResourceNotFoundException("User", "id", id.toString()));
 
         Optional<User> userOptional = this.userRepository.findByEmail(user.getEmail());
         if (userOptional.isPresent() && (userOptional.get().getId() != entity.getId()))
@@ -110,9 +116,9 @@ public class UserServiceImpl implements IUserService {
         String email;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(principal instanceof UserDetails){
+        if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
-        }else{
+        } else {
             email = principal.toString();
         }
 
@@ -127,24 +133,23 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-
     @Override
     public User changeStatus(UUID id, EUserStatus status) {
         User entity = this.userRepository.findById(id).orElseThrow(
-                () ->  new ResourceNotFoundException("User", "id", id.toString()));
+                () -> new ResourceNotFoundException("User", "id", id.toString()));
 
         entity.setStatus(status);
 
-        return  this.userRepository.save(entity);
+        return this.userRepository.save(entity);
     }
 
     @Override
     public User changeProfileImage(UUID id, File file) {
         User entity = this.userRepository.findById(id).orElseThrow(
-                () ->  new ResourceNotFoundException("Document", "id", id.toString()));
+                () -> new ResourceNotFoundException("Document", "id", id.toString()));
 
         entity.setProfileImage(file);
-        return  this.userRepository.save(entity);
+        return this.userRepository.save(entity);
 
     }
 }
