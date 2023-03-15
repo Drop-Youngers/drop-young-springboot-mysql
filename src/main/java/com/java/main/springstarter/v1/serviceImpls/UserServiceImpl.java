@@ -72,12 +72,20 @@ public class UserServiceImpl implements IUserService {
         if (userOptional.isPresent() && (userOptional.get().getId() != entity.getId()))
             throw new BadRequestException(String.format("User with email '%s' already exists", entity.getEmail()));
 
+        if (!user.getEmail().equals(entity.getEmail())) {
+            Verification verification = this.verificationRepository.getById(entity.getVerification().getId());
+            verification.setVerifiedAt(null);
+            verification.setVerified(false);
+            verification.setVerificationCode(null);
+            verification.setExpiresAt(null);
+            this.verificationRepository.save(verification);
+        }
+
         entity.setEmail(user.getEmail());
         entity.setFirstName(user.getFirstName());
         entity.setLastName(user.getLastName());
         entity.setMobile(user.getMobile());
         entity.setGender(user.getGender());
-
 
         return this.userRepository.save(entity);
     }

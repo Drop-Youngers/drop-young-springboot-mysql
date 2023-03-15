@@ -55,7 +55,6 @@ public class User extends TimestampAudit {
     @Column(name = "status")
     private EUserStatus status = EUserStatus.PENDING;
 
-    @JoinColumn(name = "verification_id")
     @OneToOne(cascade = CascadeType.ALL)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Verification verification;

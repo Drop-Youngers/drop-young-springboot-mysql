@@ -17,16 +17,15 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "verifications", uniqueConstraints = {@UniqueConstraint(columnNames = {"user"})})
+@Table(name = "verifications", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id"})})
 public class Verification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     @JoinColumn(name = "user_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @Column(name = "is_verified")
