@@ -14,7 +14,7 @@ public class MailService {
     private final SimpleMailMessage message = new SimpleMailMessage();
 
     public void sendResetPasswordMail(String toEmail, String names, String activationCodes) {
-        message.setFrom("irakizadivin@gmail.com");
+        message.setFrom("premugisha64@gmail.com");
         message.setTo(toEmail);
         message.setText("Dear " + names + "!\n" +
                 "\n" +
@@ -32,7 +32,7 @@ public class MailService {
     }
 
     public void sendVerificationMail(String toEmail, String names, String verificationCode) {
-        message.setFrom("irakizadivin@gmail.com");
+        message.setFrom("premugisha64@gmail.com");
         message.setTo(toEmail);
         message.setText("Dear " + names + "!\n" +
                 "\n" +

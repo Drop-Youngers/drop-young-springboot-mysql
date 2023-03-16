@@ -1,6 +1,7 @@
 package com.java.main.springstarter.v1.controllers;
 
 import com.java.main.springstarter.v1.dtos.InitiatePasswordDTO;
+import com.java.main.springstarter.v1.dtos.InitiateVerificationDTO;
 import com.java.main.springstarter.v1.dtos.ResetPasswordDTO;
 import com.java.main.springstarter.v1.dtos.SignInDTO;
 import com.java.main.springstarter.v1.enums.EUserStatus;
@@ -22,10 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -82,7 +80,7 @@ public class AuthenticationController {
         user.setActivationCode(Utility.randomUUID(6, 0, 'N'));
         user.setStatus(EUserStatus.RESET);
 
-        this.userRepository.save(user);
+        this.userService.create(user);
 
         mailService.sendResetPasswordMail(user.getEmail(), user.getFirstName() + " " + user.getLastName(), user.getActivationCode());
 
@@ -107,19 +105,27 @@ public class AuthenticationController {
     }
 
     @PostMapping("/initiate-email-verification")
-    public ResponseEntity<ApiResponse> initiateEmailVerification(@RequestBody String email) {
-        User user = this.userService.getByEmail(email);
-        Verification verification = this.verificationRepository.getById(user.getVerification().getId());
+    public ResponseEntity<ApiResponse> initiateEmailVerification(@RequestBody InitiateVerificationDTO dto) {
+        User user = this.userService.getByEmail(dto.getEmail());
+        System.out.println(user.toString());
+        Verification verification = new Verification();
         String verificationCode = Utility.randomUUID(6, 1, 'N');
+        verification.setUser(user);
         verification.setVerificationCode(verificationCode);
         verification.setExpiresAt(LocalDateTime.now().plusHours(5));
-        this.userRepository.save(user);
+
+        this.verificationRepository.save(verification);
+
+        user.setVerification(verification);
+
+        this.userService.create(user);
+
         mailService.sendVerificationMail(user.getEmail(), user.getFirstName() + user.getLastName(), verificationCode);
         return ResponseEntity.ok(new ApiResponse(true, "Email verification code sent successfully"));
     }
 
-    @PostMapping("/verify-email")
-    public ResponseEntity<ApiResponse> verifyEmail(@RequestBody String verificationCode) {
+    @PutMapping("/verify-email/{verificationCode}")
+    public ResponseEntity<ApiResponse> verifyEmail(@PathVariable(name = "verificationCode") String verificationCode) {
         Optional<Verification> _verification = this.verificationRepository.getVerificationByVerificationCodeAndExpiresAt(verificationCode);
         if (_verification.isEmpty()) return ResponseEntity.ok(new ApiResponse(false, "Verification token expired"));
         Verification verification = _verification.get();
